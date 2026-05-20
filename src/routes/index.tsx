@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
+import { Group as PanelGroup, Panel, Separator as PanelResizeHandle } from "react-resizable-panels";
 import { Toaster } from "@/components/ui/sonner";
 import { useApiStore } from "@/lib/api-store";
 import { Sidebar } from "@/components/studio/Sidebar";
@@ -9,7 +9,7 @@ import { ResponsePanel } from "@/components/studio/ResponsePanel";
 import { HistoryPanel } from "@/components/studio/HistoryPanel";
 import { EnvironmentBar } from "@/components/studio/EnvironmentBar";
 import { Button } from "@/components/ui/button";
-import { Plus, Github } from "lucide-react";
+import { Plus, Code2 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -46,19 +46,14 @@ function Studio() {
         </div>
         <div className="ml-auto flex items-center gap-2">
           <EnvironmentBar />
-          <a
-            href="https://github.com"
-            target="_blank"
-            rel="noreferrer"
-            className="h-8 w-8 grid place-items-center rounded-md hover:bg-muted text-muted-foreground"
-          >
-            <Github className="h-4 w-4" />
-          </a>
+          <div className="h-8 w-8 grid place-items-center rounded-md text-muted-foreground">
+            <Code2 className="h-4 w-4" />
+          </div>
         </div>
       </header>
 
       <div className="flex-1 min-h-0">
-        <PanelGroup direction="horizontal">
+        <PanelGroup orientation="horizontal" className="h-full flex">
           <Panel defaultSize={20} minSize={14} maxSize={32}>
             <Sidebar />
           </Panel>
@@ -67,7 +62,7 @@ function Studio() {
             <div className="h-full flex flex-col bg-background">
               <TabBar />
               {request ? (
-                <PanelGroup direction="vertical">
+                <PanelGroup orientation="vertical" className="flex-1 flex flex-col min-h-0">
                   <Panel defaultSize={48} minSize={24}>
                     <RequestPanel request={request} />
                   </Panel>
