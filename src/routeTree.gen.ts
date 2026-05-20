@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SIdRouteImport } from './routes/s.$id'
 import { Route as ApiPublicProxyRouteImport } from './routes/api/public/proxy'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SIdRoute = SIdRouteImport.update({
+  id: '/s/$id',
+  path: '/s/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicProxyRoute = ApiPublicProxyRouteImport.update({
@@ -25,27 +31,31 @@ const ApiPublicProxyRoute = ApiPublicProxyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/s/$id': typeof SIdRoute
   '/api/public/proxy': typeof ApiPublicProxyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/s/$id': typeof SIdRoute
   '/api/public/proxy': typeof ApiPublicProxyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/s/$id': typeof SIdRoute
   '/api/public/proxy': typeof ApiPublicProxyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/public/proxy'
+  fullPaths: '/' | '/s/$id' | '/api/public/proxy'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/public/proxy'
-  id: '__root__' | '/' | '/api/public/proxy'
+  to: '/' | '/s/$id' | '/api/public/proxy'
+  id: '__root__' | '/' | '/s/$id' | '/api/public/proxy'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SIdRoute: typeof SIdRoute
   ApiPublicProxyRoute: typeof ApiPublicProxyRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/s/$id': {
+      id: '/s/$id'
+      path: '/s/$id'
+      fullPath: '/s/$id'
+      preLoaderRoute: typeof SIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/proxy': {
@@ -70,8 +87,19 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SIdRoute: SIdRoute,
   ApiPublicProxyRoute: ApiPublicProxyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
