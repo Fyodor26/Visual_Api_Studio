@@ -54,20 +54,20 @@ function Studio() {
 
       <div className="flex-1 min-h-0">
         <PanelGroup orientation="horizontal" className="h-full flex">
-          <Panel defaultSize={20} minSize={14} maxSize={32}>
+          <Panel defaultSize="20%" minSize="14%" maxSize="32%">
             <Sidebar />
           </Panel>
           <PanelResizeHandle className="w-px bg-border hover:bg-primary/60 transition-colors" />
-          <Panel defaultSize={58} minSize={30}>
+          <Panel defaultSize="58%" minSize="30%">
             <div className="h-full flex flex-col bg-background">
               <TabBar />
               {request ? (
                 <PanelGroup orientation="vertical" className="flex-1 flex flex-col min-h-0">
-                  <Panel defaultSize={48} minSize={24}>
+                  <Panel defaultSize="48%" minSize="24%">
                     <RequestPanel request={request} />
                   </Panel>
                   <PanelResizeHandle className="h-px bg-border hover:bg-primary/60 transition-colors" />
-                  <Panel defaultSize={52} minSize={20}>
+                  <Panel defaultSize="52%" minSize="20%">
                     <ResponsePanel requestId={request.id} />
                   </Panel>
                 </PanelGroup>
@@ -77,7 +77,7 @@ function Studio() {
             </div>
           </Panel>
           <PanelResizeHandle className="w-px bg-border hover:bg-primary/60 transition-colors" />
-          <Panel defaultSize={22} minSize={16} maxSize={36}>
+          <Panel defaultSize="22%" minSize="16%" maxSize="36%">
             <HistoryPanel />
           </Panel>
         </PanelGroup>
