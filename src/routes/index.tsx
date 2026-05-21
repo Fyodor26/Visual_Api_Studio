@@ -34,15 +34,21 @@ function Studio() {
     <div className="h-screen w-screen overflow-hidden flex flex-col bg-background text-foreground">
       <Toaster theme="dark" position="bottom-right" richColors />
 
-      <header className="h-12 border-b border-border flex items-center pl-4 pr-3 gap-3 bg-card/60 backdrop-blur">
-        <div className="flex items-center gap-2">
-          <div className="h-6 w-6 rounded-md bg-gradient-to-br from-primary to-accent grid place-items-center">
-            <span className="text-[10px] font-bold text-primary-foreground">⌘</span>
+      <header className="h-14 border-b border-border/60 flex items-center pl-4 pr-3 gap-3 bg-card/40 backdrop-blur-xl relative z-10">
+        <div className="absolute inset-0 pointer-events-none opacity-60 mesh-bg" />
+        <div className="relative flex items-center gap-2.5">
+          <div className="h-8 w-8 rounded-lg grid place-items-center text-primary-foreground font-bold shadow-[0_0_24px_-6px_oklch(0.66_0.22_275/0.7)]"
+               style={{ backgroundImage: "var(--gradient-primary)" }}>
+            <span className="text-sm">⌘</span>
           </div>
-          <span className="text-sm font-semibold tracking-tight">Visual API Studio</span>
-          <span className="text-[10px] mono px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
-            preview
-          </span>
+          <div className="flex flex-col leading-none">
+            <span className="text-sm font-semibold tracking-tight display">
+              Visual <span className="gradient-text">API</span> Studio
+            </span>
+            <span className="text-[10px] mono text-muted-foreground mt-0.5 tracking-wider uppercase">
+              REST · diff · share
+            </span>
+          </div>
         </div>
         <div className="ml-auto flex items-center gap-2">
           <EnvironmentBar />
@@ -88,17 +94,33 @@ function Studio() {
 
 function EmptyState({ onNew }: { onNew: () => void }) {
   return (
-    <div className="flex-1 grid place-items-center">
-      <div className="text-center max-w-sm space-y-4">
-        <h2 className="text-2xl font-semibold tracking-tight">
-          Start <span className="text-primary">building</span> requests.
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          Create a new request, save it into collections, and share runs with a single link.
-        </p>
-        <Button onClick={onNew}>
+    <div className="flex-1 grid place-items-center relative overflow-hidden">
+      <div className="absolute inset-0 grid-bg opacity-50" />
+      <div className="absolute inset-0 mesh-bg opacity-70" />
+      <div className="relative text-center max-w-md space-y-5 px-6">
+        <div className="mx-auto h-14 w-14 rounded-2xl grid place-items-center shadow-[0_0_60px_-10px_oklch(0.66_0.22_275/0.8)]"
+             style={{ backgroundImage: "var(--gradient-primary)" }}>
+          <Code2 className="h-7 w-7 text-primary-foreground" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-3xl font-semibold tracking-tight display">
+            Ship requests <span className="gradient-text">at the speed of thought.</span>
+          </h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Build, run, diff and share REST calls — collections persist locally, share links travel via URL, environments inject {"{{variables}}"} live.
+          </p>
+        </div>
+        <Button onClick={onNew} size="lg" className="h-11 px-6 font-semibold shadow-[0_10px_40px_-10px_oklch(0.66_0.22_275/0.6)]"
+                style={{ backgroundImage: "var(--gradient-primary)" }}>
           <Plus className="h-4 w-4 mr-2" /> New request
         </Button>
+        <div className="pt-2 flex items-center justify-center gap-4 text-[11px] mono text-muted-foreground/70 uppercase tracking-wider">
+          <span>⌘ + Enter to send</span>
+          <span className="opacity-40">·</span>
+          <span>Multi-tab</span>
+          <span className="opacity-40">·</span>
+          <span>Response diff</span>
+        </div>
       </div>
     </div>
   );
