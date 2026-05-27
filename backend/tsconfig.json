@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    "target": "ESNext",
+
+    "types": ["node"],
+
+    "strict": true,
+
+    "sourceMap": true,
+
+    "declaration": true,
+    "declarationMap": true,
+
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+
+    "skipLibCheck": true,
+
+    "esModuleInterop": true,
+
+    "incremental": true
+  },
+
+  "include": ["src"]
+}

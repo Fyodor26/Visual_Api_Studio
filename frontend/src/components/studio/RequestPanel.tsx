@@ -3,7 +3,7 @@ import { Send, Loader2, Share2, Check } from "lucide-react";
 import type { ApiRequest, HttpMethod } from "@/lib/api-types";
 import { useApiStore, methodColor } from "@/lib/api-store";
 import { runRequest } from "@/lib/runner";
-import { encodeShare } from "@/lib/share";
+import { createCloudShare } from "@/lib/share"; // Import database handler
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,6 +17,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { KVEditor } from "./KVEditor";
 import { CodeEditor } from "./CodeEditor";
 import { toast } from "sonner";
+import { useAuthStore } from "C:/Users/nakul/OneDrive/Desktop/visual api studio/project-genesis/src/lib/auth-store.ts";
 
 const METHODS: HttpMethod[] = ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"];
 
@@ -27,6 +28,7 @@ export function RequestPanel({ request }: { request: ApiRequest }) {
     s.environments.find((e) => e.id === s.activeEnvId) ?? null,
   );
   const [running, setRunning] = useState(false);
+  const [sharing, setSharing] = useState(false); // New state variable tracking async backend roundtrips
   const [copied, setCopied] = useState(false);
 
   const tabCounts = useMemo(
@@ -51,12 +53,23 @@ export function RequestPanel({ request }: { request: ApiRequest }) {
   };
 
   const share = async () => {
-    const token = encodeShare(request);
-    const url = `${window.location.origin}/s/${token}`;
-    await navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1600);
-    toast.success("Share link copied", { description: url });
+    setSharing(true);
+    try {
+      // Create shortened document token reference on MongoDB instead of massive Base64 token strings
+      const shareId = await createCloudShare(request);
+      const url = `${window.location.origin}/s/${shareId}`;
+      
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+      toast.success("Share link copied", { description: url });
+    } catch (error) {
+      toast.error("Failed to generate share link", { 
+        description: "Verify your standalone backend application server status is live." 
+      });
+    } finally {
+      setSharing(false);
+    }
   };
 
   return (
@@ -110,8 +123,20 @@ export function RequestPanel({ request }: { request: ApiRequest }) {
           )}
           Send
         </Button>
-        <Button variant="outline" onClick={share} className="h-10" title="Copy shareable link">
-          {copied ? <Check className="h-4 w-4" /> : <Share2 className="h-4 w-4" />}
+        <Button 
+          variant="outline" 
+          onClick={share} 
+          className="h-10 w-10 p-0 flex items-center justify-center" 
+          disabled={sharing}
+          title="Copy shareable link"
+        >
+          {copied ? (
+            <Check className="h-4 w-4 text-emerald-500" />
+          ) : sharing ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Share2 className="h-4 w-4" />
+          )}
         </Button>
       </div>
 
